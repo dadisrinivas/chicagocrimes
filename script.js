@@ -25,7 +25,7 @@ const backButton = d3.select("#backButton")
 
 d3.csv("data/chicago_crime_data.csv").then(data => {
     d3.json("data/chicago_neighborhoods.topojson").then(neighborhoodData => {
-        const neighborhoods = topojson.feature(neighborhoodData, neighborhoodData.objects.neighborhoods);
+        const neighborhoods = topojson.feature(neighborhoodData, neighborhoodData.objects.chicago);
 
         function updateScene() {
             svg.selectAll("*").remove();
@@ -147,5 +147,9 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
         }
 
         updateScene();
+    }).catch(error => {
+        console.error("Error loading TopoJSON:", error);
     });
+}).catch(error => {
+    console.error("Error loading CSV:", error);
 });
