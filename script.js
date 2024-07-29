@@ -65,7 +65,8 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
             // Filter out undefined community areas
             const validNeighborhoods = neighborhoods.features.filter(f => f.properties.name !== undefined);
             validNeighborhoods.forEach(f => console.log("Valid Location Description from TopoJSON:", f.properties.name));
-
+			console.log('am i printing this');
+            console.log(validNeighborhoods);
             // Log community areas from CSV
             const csvCommunityAreas = Array.from(new Set(data.map(d => d["Location Description"])));
             csvCommunityAreas.forEach(ca => console.log("Location Description from CSV:", ca));
