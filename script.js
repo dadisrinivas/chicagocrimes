@@ -59,6 +59,9 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
         function showCrimeOverview(neighborhoods, data) {
             console.log("Showing crime overview");
 
+            // Log all properties of the first neighborhood feature
+            console.log("First neighborhood feature properties:", neighborhoods.features[0].properties);
+
             // Filter out undefined community areas
             const validNeighborhoods = neighborhoods.features.filter(f => f.properties.community_area !== undefined);
             validNeighborhoods.forEach(f => console.log("Valid Community Area from TopoJSON:", f.properties.community_area));
@@ -78,7 +81,7 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
 
             const path = d3.geoPath();
 
-            svg.selectAll("path")
+            const paths = svg.selectAll("path")
                 .data(validNeighborhoods)
                 .enter().append("path")
                 .attr("d", path)
@@ -89,6 +92,8 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
                     currentScene = 2;
                     updateScene();
                 });
+
+            console.log("Paths appended:", paths.size());
 
             // Add annotations here if necessary
         }
