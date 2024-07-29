@@ -63,15 +63,15 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
             console.log("First neighborhood feature properties:", neighborhoods.features[0].properties);
 
             // Filter out undefined community areas
-            const validNeighborhoods = neighborhoods.features.filter(f => f.properties.community_area !== undefined);
-            validNeighborhoods.forEach(f => console.log("Valid Community Area from TopoJSON:", f.properties.community_area));
+            const validNeighborhoods = neighborhoods.features.filter(f => f.properties.name !== undefined);
+            validNeighborhoods.forEach(f => console.log("Valid Location Description from TopoJSON:", f.properties.name));
 
             // Log community areas from CSV
-            const csvCommunityAreas = Array.from(new Set(data.map(d => d["Community Area"])));
-            csvCommunityAreas.forEach(ca => console.log("Community Area from CSV:", ca));
+            const csvCommunityAreas = Array.from(new Set(data.map(d => d["Location Description"])));
+            csvCommunityAreas.forEach(ca => console.log("Location Description from CSV:", ca));
 
             // Crime overview by community area
-            const crimeCounts = d3.rollups(data, v => v.length, d => d["Community Area"]);
+            const crimeCounts = d3.rollups(data, v => v.length, d => d["Location Description"]);
             const crimeCountMap = new Map(crimeCounts);
             console.log("Crime count map:", crimeCountMap);
 
@@ -85,10 +85,10 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
                 .data(validNeighborhoods)
                 .enter().append("path")
                 .attr("d", path)
-                .attr("fill", d => colorScale(crimeCountMap.get(d.properties.community_area) || 0))
+                .attr("fill", d => colorScale(crimeCountMap.get(d.properties.name) || 0))
                 .attr("stroke", "#333")
                 .on("click", (event, d) => {
-                    selectedNeighborhood = d.properties.community_area;
+                    selectedNeighborhood = d.properties.name;
                     currentScene = 2;
                     updateScene();
                 });
@@ -102,7 +102,7 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
             console.log("Showing crime types by neighborhood:", neighborhood);
 
             // Filter data by community area
-            const filteredData = data.filter(d => d["Community Area"] === neighborhood);
+            const filteredData = data.filter(d => d["Location Description"] === neighborhood);
             const crimeCounts = d3.rollups(filteredData, v => v.length, d => d["Primary Type"]);
             console.log("Crime counts by type for neighborhood:", neighborhood, crimeCounts);
             
@@ -146,7 +146,7 @@ d3.csv("data/chicago_crime_data.csv").then(data => {
             console.log("Showing temporal trends for:", neighborhood, crimeType);
 
             // Filter data by community area and crime type
-            const filteredData = data.filter(d => d["Community Area"] === neighborhood && d["Primary Type"] === crimeType);
+            const filteredData = data.filter(d => d["Location Description"] === neighborhood && d["Primary Type"] === crimeType);
             const crimeTrends = d3.rollups(filteredData, v => v.length, d => d.Date)
                 .sort((a, b) => d3.ascending(new Date(a[0]), new Date(b[0])));
             console.log("Crime trends for", neighborhood, crimeType, crimeTrends);
